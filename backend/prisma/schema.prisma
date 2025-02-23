@@ -15,8 +15,8 @@ model Member {
   mem_phone String
   mem_email String
 
-  // One-to-many relationship with Membership
-  membership Membership[]
+  // One-to-one relationship with Membership
+  membership Membership?
 
   // One-to-many relationship with Issuance
   issuances  Issuance[]
@@ -28,8 +28,8 @@ model Membership {
   member_id     Int    @unique
   status        String
 
-  // Relation to Member; each membership is linked to one member
-  member        Member @relation(fields: [member_id], references: [mem_id])
+  // Relation to Member (only one side should have `fields` & `references`)
+  member        Member @relation(fields: [member_id], references: [mem_id], onDelete: Cascade)
 }
 
 // Model for Collection table
@@ -61,8 +61,8 @@ model Book {
   book_collection_id Int
 
   // Relations: Each book belongs to one category and one collection
-  category           Category  @relation(fields: [book_cat_id], references: [cat_id])
-  collection         Collection @relation(fields: [book_collection_id], references: [collection_id])
+  category           Category  @relation(fields: [book_cat_id], references: [cat_id], onDelete: Cascade)
+  collection         Collection @relation(fields: [book_collection_id], references: [collection_id], onDelete: Cascade)
 
   // One-to-many relationship with Issuance
   issuances          Issuance[]
@@ -75,10 +75,10 @@ model Issuance {
   issuance_date       DateTime
   issuance_member     Int
   issued_by           String
-  target_return_date  DateTime
+  target_return_date  DateTime?
   issuance_status     String
 
   // Relations: Link each issuance to a book and a member
-  book                Book     @relation(fields: [book_id], references: [book_id])
-  member              Member   @relation(fields: [issuance_member], references: [mem_id])
+  book                Book     @relation(fields: [book_id], references: [book_id], onDelete: Cascade)
+  member              Member   @relation(fields: [issuance_member], references: [mem_id], onDelete: Cascade)
 }

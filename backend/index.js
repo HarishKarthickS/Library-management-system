@@ -20,12 +20,13 @@ const memberRoutes = require('./routes/member.routes');
 const bookRoutes = require('./routes/book.routes');
 const issuanceRoutes = require('./routes/issuance.routes');
 const reportRoutes = require('./routes/report.routes');
-
+const categoryCollectionRoutes = require('./routes/categoryCollection.routes');
 // API Endpoints
 app.use('/member', memberRoutes);
 app.use('/book', bookRoutes);
 app.use('/issuance', issuanceRoutes);
 app.use('/reports', reportRoutes);
+app.use('/', categoryCollectionRoutes);
 
 // Base Route
 app.get('/', (req, res) => {
