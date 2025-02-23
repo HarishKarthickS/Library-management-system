@@ -25,9 +25,10 @@
     "seed": "node prisma/seed.js"
   },
   "devDependencies": {
-    "eslint": "^8.50.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
+    "globals": "^16.0.0",
     "jest": "^29.0.0",
     "nodemon": "^3.1.9",
     "prisma": "^5.0.0",

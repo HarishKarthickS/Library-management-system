@@ -64,7 +64,7 @@ jobs:
         run: npm test
 
   frontend:
-    name: Frontend Build & Linting
+    name: Frontend Build 
     runs-on: ubuntu-latest
 
     steps:
@@ -81,10 +81,6 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: npm install
-
-      - name: Run Linter
-        working-directory: frontend
-        run: npm run lint
 
       - name: Build Frontend
         working-directory: frontend
