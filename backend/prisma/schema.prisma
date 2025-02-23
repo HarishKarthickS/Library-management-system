@@ -1,0 +1,84 @@
+// Define the data source and generator
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Model for Member table
+model Member {
+  mem_id    Int         @id @default(autoincrement())
+  mem_name  String
+  mem_phone String
+  mem_email String
+
+  // One-to-many relationship with Membership
+  membership Membership[]
+
+  // One-to-many relationship with Issuance
+  issuances  Issuance[]
+}
+
+// Model for Membership table
+model Membership {
+  membership_id Int    @id @default(autoincrement())
+  member_id     Int    @unique
+  status        String
+
+  // Relation to Member; each membership is linked to one member
+  member        Member @relation(fields: [member_id], references: [mem_id])
+}
+
+// Model for Collection table
+model Collection {
+  collection_id   Int    @id @default(autoincrement())
+  collection_name String
+
+  // One-to-many relationship with Book
+  books           Book[]
+}
+
+// Model for Category table
+model Category {
+  cat_id       Int    @id @default(autoincrement())
+  cat_name     String
+  sub_cat_name String
+
+  // One-to-many relationship with Book
+  books        Book[]
+}
+
+// Model for Book table
+model Book {
+  book_id            Int       @id @default(autoincrement())
+  book_name          String
+  book_launch_date   DateTime
+  book_publisher     String
+  book_cat_id        Int
+  book_collection_id Int
+
+  // Relations: Each book belongs to one category and one collection
+  category           Category  @relation(fields: [book_cat_id], references: [cat_id])
+  collection         Collection @relation(fields: [book_collection_id], references: [collection_id])
+
+  // One-to-many relationship with Issuance
+  issuances          Issuance[]
+}
+
+// Model for Issuance table
+model Issuance {
+  issuance_id         Int      @id @default(autoincrement())
+  book_id             Int
+  issuance_date       DateTime
+  issuance_member     Int
+  issued_by           String
+  target_return_date  DateTime
+  issuance_status     String
+
+  // Relations: Link each issuance to a book and a member
+  book                Book     @relation(fields: [book_id], references: [book_id])
+  member              Member   @relation(fields: [issuance_member], references: [mem_id])
+}
