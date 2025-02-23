@@ -1,0 +1,41 @@
+{
+  "name": "library-management-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Library Management System using Node.js, Express, and Prisma.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "migrate": "npx prisma migrate dev --name init",
+    "generate": "npx prisma generate",
+    "seed": "node prisma/seed.js",
+    "test": "jest --runInBand",
+    "lint": "eslint . --fix",
+    "db:push": "npx prisma db push"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.11.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.50.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["express", "prisma", "postgresql", "library-management"],
+  "author": "HarishKarthickS",
+  "license": "MIT"
+}
