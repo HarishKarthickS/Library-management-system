@@ -1,0 +1,165 @@
+/* 🔷 Global Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  color: #333;
+  transition: background 0.3s ease-in-out;
+}
+
+/* 📌 Glassmorphism Effect */
+.glass-container {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* 🔷 Buttons */
+button {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* ✅ Primary Buttons */
+.btn-primary {
+  background: linear-gradient(90deg, #4f46e5, #9333ea);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #4338ca, #7e22ce);
+}
+
+/* ❌ Danger Buttons */
+.btn-danger {
+  background: linear-gradient(90deg, #dc2626, #b91c1c);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(90deg, #b91c1c, #991b1b);
+}
+
+/* ✅ Success Buttons */
+.btn-success {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.btn-success:hover {
+  background: linear-gradient(90deg, #16a34a, #15803d);
+}
+
+/* 📌 Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: linear-gradient(90deg, #4f46e5, #9333ea);
+  color: white;
+}
+
+/* 🎭 Hover Effect */
+tr:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 🔷 Navigation Bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  color: white;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* 📌 Cards */
+.card {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* 🎭 Dark Mode */
+.dark-mode {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: white;
+}
+
+.dark-mode .glass-container {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode table {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.dark-mode th {
+  background: linear-gradient(90deg, #111827, #1f2937);
+}
+
+.dark-mode tr:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 🔷 Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  table, th, td {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
