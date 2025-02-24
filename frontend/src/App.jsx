@@ -10,6 +10,7 @@ import BookForm from "./components/BookForm";
 import MemberForm from "./components/MemberForm";
 import IssuanceForm from "./components/IssuanceForm";
 import ContactPage from "./pages/ContactPage";
+import { Link } from "react-router-dom";
 import ReportPage from "./pages/ReportPage";
 import "./App.css";
 
@@ -21,10 +22,11 @@ const Navbar = ({ toggleDarkMode, isDarkMode }) => {
         <a href="/"><h1 className="text-xl font-bold">📚 Library Management System</h1></a>
       </div>
       <div>
-        <a href="/">🏠 Home</a>
-        <a href="/books">📖 Books</a>
-        <a href="/members">👥 Members</a>
-        <a href="/issuance">🔄 Issuance</a>
+      <Link to="/">🏠 Home</Link>
+<Link to="/books">📖 Books</Link>
+<Link to="/members">👥 Members</Link>
+<Link to="/issuance">🔄 Issuance</Link>
+
         <button onClick={toggleDarkMode} className="ml-4 btn-primary">
           {isDarkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
         </button>
