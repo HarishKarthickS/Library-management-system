@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { React,useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
-const MemberForm = ({ memberToEdit, onFormSubmit }) => {
+const MemberForm = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // Get member ID for edit mode
 
   const [formData, setFormData] = useState({
     mem_name: "",
@@ -17,12 +16,25 @@ const MemberForm = ({ memberToEdit, onFormSubmit }) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    if (memberToEdit) {
-      setFormData(memberToEdit);
+    if (id) {
+      fetchMemberDetails(id);
+      setIsEdit(true);
     }
-  }, [memberToEdit]);
+  }, [id]);
+
+  const fetchMemberDetails = async (memberId) => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/member/${memberId}`, {
+        headers: { "x-api-key": import.meta.env.VITE_API_KEY },
+      });
+      setFormData(response.data);
+    } catch (error) {
+      toast.error("Error fetching member details.", { position: "top-right" });
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,19 +45,19 @@ const MemberForm = ({ memberToEdit, onFormSubmit }) => {
     setLoading(true);
 
     try {
-      const url = memberToEdit
-        ? `${import.meta.env.VITE_API_BASE_URL}/member/${memberToEdit.mem_id}`
+      const url = isEdit
+        ? `${import.meta.env.VITE_API_BASE_URL}/member/${id}`
         : `${import.meta.env.VITE_API_BASE_URL}/member`;
-      const method = memberToEdit ? "put" : "post";
+      const method = isEdit ? "put" : "post";
 
-      const response = await axios[method](url, formData, {
+      await axios[method](url, formData, {
         headers: { "x-api-key": import.meta.env.VITE_API_KEY },
       });
 
-      toast.success(memberToEdit ? "Member updated successfully!" : "Member added successfully!", { position: "top-right" });
-      onFormSubmit(response.data);
+      toast.success(isEdit ? "Member updated successfully!" : "Member added successfully!", {
+        position: "top-right",
+      });
 
-      // Redirect back to members list after form submission
       setTimeout(() => navigate("/members"), 1500);
     } catch (error) {
       toast.error("Error submitting member. Please try again.", { position: "top-right" });
@@ -62,52 +74,46 @@ const MemberForm = ({ memberToEdit, onFormSubmit }) => {
       className="max-w-lg mx-auto p-6 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 shadow-lg rounded-2xl text-white"
     >
       <h2 className="text-2xl font-extrabold text-center mb-4">
-        {memberToEdit ? "👤 Edit Member" : "👥 Add New Member"}
+        {isEdit ? "👤 Edit Member" : "👥 Add New Member"}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Member Name */}
-        <div className="relative">
-          <label className="absolute -top-3 left-3 bg-green-500 px-2 text-xs rounded-md shadow-md">
-            Member Name
-          </label>
+        <div>
+          <label className="block font-semibold text-lg">Member Name</label>
           <input
             type="text"
             name="mem_name"
             value={formData.mem_name}
             onChange={handleChange}
             required
-            className="block w-full border-none rounded-md bg-white text-gray-900 p-3 focus:ring-2 focus:ring-indigo-300"
+            className="w-full p-3 bg-white text-gray-900 rounded-md shadow-md focus:ring-2 focus:ring-indigo-300"
           />
         </div>
 
         {/* Phone Number */}
-        <div className="relative">
-          <label className="absolute -top-3 left-3 bg-green-500 px-2 text-xs rounded-md shadow-md">
-            Phone Number
-          </label>
+        <div>
+          <label className="block font-semibold text-lg">Phone Number</label>
           <input
             type="text"
             name="mem_phone"
             value={formData.mem_phone}
             onChange={handleChange}
             required
-            className="block w-full border-none rounded-md bg-white text-gray-900 p-3 focus:ring-2 focus:ring-indigo-300"
+            className="w-full p-3 bg-white text-gray-900 rounded-md shadow-md focus:ring-2 focus:ring-indigo-300"
           />
         </div>
 
         {/* Email */}
-        <div className="relative">
-          <label className="absolute -top-3 left-3 bg-green-500 px-2 text-xs rounded-md shadow-md">
-            Email
-          </label>
+        <div>
+          <label className="block font-semibold text-lg">Email</label>
           <input
             type="email"
             name="mem_email"
             value={formData.mem_email}
             onChange={handleChange}
             required
-            className="block w-full border-none rounded-md bg-white text-gray-900 p-3 focus:ring-2 focus:ring-indigo-300"
+            className="w-full p-3 bg-white text-gray-900 rounded-md shadow-md focus:ring-2 focus:ring-indigo-300"
           />
         </div>
 
@@ -118,7 +124,7 @@ const MemberForm = ({ memberToEdit, onFormSubmit }) => {
             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
             disabled={loading}
           >
-            {loading ? "Submitting..." : memberToEdit ? "Update Member" : "Add Member"}
+            {loading ? "Submitting..." : isEdit ? "Update Member" : "Add Member"}
           </button>
           <button
             type="button"

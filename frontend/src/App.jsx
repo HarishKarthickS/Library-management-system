@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { React,useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import HomePage from "./pages/HomePage";
@@ -23,9 +23,11 @@ const Navbar = ({ toggleDarkMode, isDarkMode }) => {
       </div>
       <div>
       <Link to="/">🏠 Home</Link>
-<Link to="/books">📖 Books</Link>
-<Link to="/members">👥 Members</Link>
-<Link to="/issuance">🔄 Issuance</Link>
+      <Link to="/books">📖 Books</Link>
+      <Link to="/members">👥 Members</Link>
+      <Link to="/issuance">🔄 Issuance</Link>
+      <Link to="/reports">📊 Reports</Link>
+      <Link to="/contact">📞 Contact</Link>
 
         <button onClick={toggleDarkMode} className="ml-4 btn-primary">
           {isDarkMode ? "☀ Light Mode" : "🌙 Dark Mode"}

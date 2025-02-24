@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { React,useEffect, useState,useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
@@ -10,12 +10,19 @@ const ReportPage = () => {
     outstandingBooks: [],
     topBorrowedBooks: [],
   });
+  const toastShownRef = useRef(false);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchReports();
   }, []);
+  useEffect(() => {
+      if (!toastShownRef.current && reports.length > 0) {
+        toast.success("reports loaded successfully!", { position: "top-right" });
+        toastShownRef.current = true; // Mark toast as shown
+      }
+    }, [reports]); // Run only when reports change
 
   const fetchReports = async () => {
     try {
@@ -36,8 +43,6 @@ const ReportPage = () => {
         outstandingBooks: outstandingRes.data,
         topBorrowedBooks: topBorrowedRes.data,
       });
-
-      toast.success("📊 Reports loaded successfully!", { position: "top-right" });
     } catch (error) {
       toast.error("❌ Error loading reports!", { position: "top-right" });
     }

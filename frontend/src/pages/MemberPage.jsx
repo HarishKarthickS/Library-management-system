@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { React,useEffect, useState,useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -29,18 +29,23 @@ const MemberPage = () => {
   const [loading, setLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
+  const toastShownRef = useRef(false);
 
   useEffect(() => {
     fetchMembers();
   }, []);
-
+useEffect(() => {
+    if (!toastShownRef.current && members.length > 0) {
+      toast.success("Members loaded successfully!", { position: "top-right" });
+      toastShownRef.current = true; // Mark toast as shown
+    }
+  }, [members]); // Run only when members change
   const fetchMembers = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/member`, {
         headers: { "x-api-key": import.meta.env.VITE_API_KEY },
       });
       setMembers(response.data);
-      toast.success("Members loaded successfully!", { position: "top-right" });
     } catch (error) {
       toast.error("Error fetching members!", { position: "top-right" });
     }
@@ -63,7 +68,6 @@ const MemberPage = () => {
         headers: { "x-api-key": import.meta.env.VITE_API_KEY },
       });
       setMembers(members.filter((member) => member.mem_id !== selectedMember.mem_id));
-      toast.success("Member deleted successfully!", { position: "top-right" });
     } catch (error) {
       toast.error("Error deleting member!", { position: "top-right" });
     }
@@ -139,7 +143,7 @@ const MemberPage = () => {
       )}
 
       {/* Modal for Delete Confirmation */}
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalStyles} ariaHideApp={false}>
+      <Modal isOpen={modalIsOpen} className="h-[150px] bg-white mt-[48vh]" onRequestClose={closeModal} style={modalStyles} ariaHideApp={false}>
         <h2 className="text-xl font-bold text-gray-800">Are you sure?</h2>
         <p className="text-gray-600 mb-4">
           Do you really want to delete <strong>{selectedMember?.mem_name}</strong>?

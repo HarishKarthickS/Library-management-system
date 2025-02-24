@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
-const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
+const IssuanceForm = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // Get issuance ID for edit mode
 
   const [formData, setFormData] = useState({
     book_id: "",
@@ -22,34 +21,47 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
   const [books, setBooks] = useState([]);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    if (issuanceToEdit) {
-      setFormData(issuanceToEdit);
-    }
-  }, [issuanceToEdit]);
-
-  useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const [booksRes, membersRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_BASE_URL}/book`, {
-            headers: { "x-api-key": import.meta.env.VITE_API_KEY },
-          }),
-          axios.get(`${import.meta.env.VITE_API_BASE_URL}/member`, {
-            headers: { "x-api-key": import.meta.env.VITE_API_KEY },
-          }),
-        ]);
-
-        setBooks(booksRes.data);
-        setMembers(membersRes.data);
-      } catch (error) {
-        toast.error("Failed to fetch books or members!", { position: "top-right" });
-      }
-    };
-
     fetchDropdownData();
-  }, []);
+    if (id) {
+      fetchIssuanceDetails(id);
+      setIsEdit(true);
+    }
+  }, [id]);
+
+  const fetchDropdownData = async () => {
+    try {
+      const [booksRes, membersRes] = await Promise.all([
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/book`, {
+          headers: { "x-api-key": import.meta.env.VITE_API_KEY },
+        }),
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/member`, {
+          headers: { "x-api-key": import.meta.env.VITE_API_KEY },
+        }),
+      ]);
+      setBooks(booksRes.data);
+      setMembers(membersRes.data);
+    } catch (error) {
+      toast.error("Failed to fetch books or members!", { position: "top-right" });
+    }
+  };
+
+  const fetchIssuanceDetails = async (issuanceId) => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/issuance/${issuanceId}`, {
+        headers: { "x-api-key": import.meta.env.VITE_API_KEY },
+      });
+      setFormData({ 
+        ...response.data, 
+        issuance_date: response.data.issuance_date.split("T")[0], 
+        target_return_date: response.data.target_return_date.split("T")[0] 
+      });
+    } catch (error) {
+      toast.error("Error fetching issuance details.", { position: "top-right" });
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,17 +72,18 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
     setLoading(true);
 
     try {
-      const url = issuanceToEdit
-        ? `${import.meta.env.VITE_API_BASE_URL}/issuance/${issuanceToEdit.issuance_id}`
+      const url = isEdit
+        ? `${import.meta.env.VITE_API_BASE_URL}/issuance/${id}`
         : `${import.meta.env.VITE_API_BASE_URL}/issuance`;
-      const method = issuanceToEdit ? "put" : "post";
+      const method = isEdit ? "put" : "post";
 
-      const response = await axios[method](url, formData, {
+      await axios[method](url, formData, {
         headers: { "x-api-key": import.meta.env.VITE_API_KEY },
       });
 
-      toast.success(issuanceToEdit ? "Issuance updated successfully!" : "Book issued successfully!", { position: "top-right" });
-      onFormSubmit(response.data);
+      toast.success(isEdit ? "Issuance updated successfully!" : "Book issued successfully!", {
+        position: "top-right",
+      });
 
       setTimeout(() => navigate("/issuance"), 1500);
     } catch (error) {
@@ -88,21 +101,18 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
       className="max-w-lg mx-auto p-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg rounded-2xl text-white"
     >
       <h2 className="text-2xl font-extrabold text-center mb-4">
-        {issuanceToEdit ? "✍ Edit Issuance" : "📖 Issue a Book"}
+        {isEdit ? "✍ Edit Issuance" : "📖 Issue a Book"}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Book Dropdown */}
-        <div className="relative">
-          <label className="absolute -top-3 left-3 bg-purple-500 px-2 text-xs rounded-md shadow-md">
-            Select Book
-          </label>
+        <div>
+          <label className="block font-semibold text-lg">Select Book</label>
           <select
             name="book_id"
             value={formData.book_id}
             onChange={handleChange}
             required
-            className="block w-full border-none rounded-md bg-white text-gray-900 p-3 focus:ring-2 focus:ring-indigo-300"
+            className="w-full p-3 bg-white text-gray-900 rounded-md shadow-md focus:ring-2 focus:ring-indigo-300"
           >
             <option value="">Choose a Book</option>
             {books.map((book) => (
@@ -113,17 +123,14 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
           </select>
         </div>
 
-        {/* Member Dropdown */}
-        <div className="relative">
-          <label className="absolute -top-3 left-3 bg-purple-500 px-2 text-xs rounded-md shadow-md">
-            Select Member
-          </label>
+        <div>
+          <label className="block font-semibold text-lg">Select Member</label>
           <select
             name="issuance_member"
             value={formData.issuance_member}
             onChange={handleChange}
             required
-            className="block w-full border-none rounded-md bg-white text-gray-900 p-3 focus:ring-2 focus:ring-indigo-300"
+            className="w-full p-3 bg-white text-gray-900 rounded-md shadow-md focus:ring-2 focus:ring-indigo-300"
           >
             <option value="">Choose a Member</option>
             {members.map((member) => (
@@ -134,7 +141,6 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
           </select>
         </div>
 
-        {/* Issuance Date */}
         <div>
           <label className="block font-semibold text-lg">Issuance Date</label>
           <input
@@ -147,9 +153,8 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
           />
         </div>
 
-        {/* Return Date */}
         <div>
-          <label className="block font-semibold text-lg">Return Date</label>
+          <label className="block font-semibold text-lg">Target Return Date</label>
           <input
             type="date"
             name="target_return_date"
@@ -160,27 +165,28 @@ const IssuanceForm = ({ issuanceToEdit, onFormSubmit }) => {
           />
         </div>
 
-        {/* Issued By */}
         <div>
-          <label className="block font-semibold text-lg">Issued By</label>
-          <input
-            type="text"
-            name="issued_by"
-            value={formData.issued_by}
+          <label className="block font-semibold text-lg">Issuance Status</label>
+          <select
+            name="issuance_status"
+            value={formData.issuance_status}
             onChange={handleChange}
             required
             className="w-full p-3 bg-white text-gray-900 rounded-md shadow-md focus:ring-2 focus:ring-indigo-300"
-          />
+          >
+            <option value="pending">Pending</option>
+            <option value="issued">Issued</option>
+            <option value="returned">Returned</option>
+          </select>
         </div>
 
-        {/* Submit & Cancel Buttons */}
         <div className="flex justify-between">
           <button
             type="submit"
             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
             disabled={loading}
           >
-            {loading ? "Processing..." : issuanceToEdit ? "Update Issuance" : "Issue Book"}
+            {loading ? "Processing..." : isEdit ? "Update Issuance" : "Issue Book"}
           </button>
           <button
             type="button"

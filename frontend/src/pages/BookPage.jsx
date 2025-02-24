@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {React, useEffect, useState ,useRef} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -30,10 +30,19 @@ const BookPage = () => {
   const [loading, setLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const toastShownRef = useRef(false); 
 
   useEffect(() => {
     fetchBooks();
   }, []);
+  
+  useEffect(() => {
+    if (!toastShownRef.current && books.length > 0) {
+      toast.success("Books loaded successfully!", { position: "top-right" });
+      toastShownRef.current = true; // Mark toast as shown
+    }
+  }, [books]); // Run only when books change
+  
 
   const fetchBooks = async () => {
     try {
@@ -41,8 +50,6 @@ const BookPage = () => {
         headers: { "x-api-key": import.meta.env.VITE_API_KEY },
       });
       setBooks(response.data);
-      console.log(response.data);
-      toast.success("Books loaded successfully!", { position: "top-right" });
     } catch (error) {
       toast.error("Error fetching books!", { position: "top-right" });
     }
@@ -82,6 +89,7 @@ const BookPage = () => {
       <h1 className="text-3xl font-bold text-center text-white mb-6 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 p-4 rounded-lg shadow-md">
         📚 Book Management
       </h1>
+      
 
       <div className="flex justify-end mb-4">
         <Link
@@ -121,7 +129,7 @@ const BookPage = () => {
                   <td className="p-3">{book.book_name}</td>
                   <td className="p-3">{book.category?.cat_name || "N/A"}</td>
                   <td className="p-3">{book.collection?.collection_name || "N/A"}</td>
-                  <td className="p-3">{book.book_launch_date}</td>
+                  <td className="p-3">{book.book_launch_date ? new Date(book.book_launch_date).toLocaleDateString() : "N/A"}</td>
                   <td className="p-3">{book.book_publisher}</td>
                   <td className="p-3 text-center">
                     <button
