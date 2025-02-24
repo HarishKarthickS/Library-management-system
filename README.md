@@ -1,24 +1,59 @@
 # 📚 Library Management System 🚀
 
-Welcome to the **Library Management System**—a powerful, efficient, and user-friendly platform designed to streamline book management and tracking in libraries. 📖✨
+Welcome to the **Library Management System**—a powerful, efficient, and user-friendly platform designed to streamline book management and tracking in libraries. 📚✨
 
 ## 🌟 About This Project
 This system ensures smooth handling of **book issuance, member management, and insightful reporting** with a full-stack modern tech approach.
 
 ### 🛠 Tech Stack
-- **Frontend:** Vite ⚡ + React 🧡 (Latest Version, No Routes)
-- **Backend:** Express 🚀 + Prisma 🛢️ + PostgreSQL 🐘
+- **Frontend:** Vite ⚡ + React 🤍 (Latest Version, No Routes)
+- **Backend:** Express 🚀 + Prisma 🛢️ + PostgreSQL 🐗
 - **Authentication & Security:** Middleware Magic ✨
 - **Deployment:** Docker 🐳 + CI/CD Ready 🎯
 
 ## 🎯 Features
-✅ Add, edit, delete members with details 📇  
-✅ Categorize books with collections & categories 📖  
+✅ Add, edit, delete members with details 👇  
+✅ Categorize books with collections & categories 📚  
 ✅ Issue books to members with return tracking ⏳  
 ✅ Generate reports on **never borrowed & overdue books** 📊  
 ✅ Intuitive and sleek UI for a seamless experience 🎨  
 
-## 🏗️ Project Structure
+## 🏡 Homepage
+![Homepage](https://snipboard.io/3OnZ82.jpg)
+
+## 📚 Books Section
+### Book Listing
+![Book Page](https://snipboard.io/dawCYp.jpg)
+### Add New Book
+![Add New Book](https://snipboard.io/SrqayE.jpg)
+### Edit Book
+![Edit Book](https://snipboard.io/rR4t2s.jpg)
+
+## 👥 Members Section
+### Member Listing
+![Member Page](https://snipboard.io/7Dp3gw.jpg)
+### Add New Member
+![Add New Member](https://snipboard.io/ue9X8b.jpg)
+### Edit Member
+![Edit Member](https://snipboard.io/pgIWeq.jpg)
+
+## ♻️ Issuance Section
+### Issuance Listing
+![Issuance Page](https://snipboard.io/57MNXI.jpg)
+### Add New Issuance
+![Add New Issuance](https://snipboard.io/X1AeN0.jpg)
+### Edit Issuance
+![Edit Issuance](https://snipboard.io/z78VSh.jpg)
+
+## 📊 Library Reports
+![Library Report 1](https://snipboard.io/F136Zt.jpg)  
+![Library Report 2](https://snipboard.io/Z6hCY8.jpg)  
+![Library Report 3](https://snipboard.io/o2cY3a.jpg)  
+
+## 📞 Contact Page
+![Contact Page](https://snipboard.io/MAalJ0.jpg)
+
+## 🏢 Project Structure
 ```
 library-management-system/
 ├── backend/               # Backend API (Node.js + Express + Prisma)
@@ -51,7 +86,7 @@ library-management-system/
 ```
 
 ## 🚀 Quick Start
-### 🏗 Backend Setup
+### 🏢 Backend Setup
 ```sh
 cd backend
 npm install
@@ -82,13 +117,14 @@ docker-compose up --build
 - **🚀 High Performance:** Optimized with Prisma & Vite ⚡
 - **📊 Insightful Reports:** Know which books are most/least borrowed 📉
 - **🎨 Sleek UI:** Easy navigation with an elegant design ✨
-- **🛠 Scalable & Maintainable:** Modular and future-proof architecture 🏗
+- **🛠 Scalable & Maintainable:** Modular and future-proof architecture 🏢
 
 ## 🏅 The Task & Job Relevance
-This project aligns perfectly with UI/UX, AI Engineering, and Data Engineering roles:
-- **📐 UI/UX:** Designing an intuitive and responsive dashboard.
+This project aligns perfectly with UI/UX, AI Engineering, Data Engineering, and DevOps roles:
+- **💐 UI/UX:** Designing an intuitive and responsive dashboard.
 - **📊 Data Engineering:** Managing book & member data effectively.
 - **🤖 AI Engineering:** Can be extended with AI-powered book recommendations.
+- **🛠 DevOps:** Streamlining deployment and CI/CD pipelines with Docker & GitHub Actions.
 
 ## 🤝 Contributing
 Got an idea? A feature request? **PRs are welcome!** Fork the repo and make it even better! 💡✨
@@ -100,7 +136,7 @@ Got an idea? A feature request? **PRs are welcome!** Fork the repo and make it e
 
 🐙 **GitHub:** [Harish Karthick S](https://github.com/HarishKarthickS)  
 
-## 🏁 Final Words
-Thanks for checking out this project! If you made it this far, you deserve a **virtual high-five** ✋! 
-Happy coding & keep reading! 📖✨
+## 🎾 Final Words
+Thanks for checking out this project! If you made it this far, you deserve a **virtual high-five** ✋!  
+Happy coding & keep reading! 📚✨
 

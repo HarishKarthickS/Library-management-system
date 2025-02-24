@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { React,useEffect, useState,useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -29,10 +29,16 @@ const IssuancePage = () => {
   const [loading, setLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedIssuance, setSelectedIssuance] = useState(null);
-
+  const toastShownRef = useRef(false);
   useEffect(() => {
     fetchIssuances();
   }, []);
+  useEffect(() => {
+      if (!toastShownRef.current && issuances.length > 0) {
+        toast.success("Issuances loaded successfully!", { position: "top-right" });
+        toastShownRef.current = true; // Mark toast as shown
+      }
+    }, [issuances]); // Run only when issuances change
 
   const fetchIssuances = async () => {
     try {
@@ -119,8 +125,8 @@ const IssuancePage = () => {
                 >
                   <td className="p-3">{issuance.book.book_name}</td>
                   <td className="p-3">{issuance.member.mem_name}</td>
-                  <td className="p-3">{issuance.issuance_date}</td>
-                  <td className="p-3">{issuance.target_return_date}</td>
+                  <td className="p-3">{new Date(issuance.issuance_date).toLocaleDateString()}</td>
+                  <td className="p-3">{new Date(issuance.target_return_date).toLocaleDateString()}</td>
                   <td className={`p-3 font-bold ${issuance.issuance_status === "pending" ? "text-red-500" : "text-green-500"}`}>
                     {issuance.issuance_status}
                   </td>
@@ -146,7 +152,7 @@ const IssuancePage = () => {
       )}
 
       {/* Modal for Delete Confirmation */}
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalStyles} ariaHideApp={false}>
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="h-[150px] bg-white mt-[48vh]" style={modalStyles} ariaHideApp={false}>
         <h2 className="text-xl font-bold text-gray-800">Are you sure?</h2>
         <p className="text-gray-600 mb-4">
           Do you really want to delete the issuance for <strong>{selectedIssuance?.book_name}</strong>?
