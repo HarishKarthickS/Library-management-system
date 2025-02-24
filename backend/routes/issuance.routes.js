@@ -101,7 +101,19 @@ router.put('/:id', async (req, res) => {
 // ✅ DELETE - Remove an issuance record (Optional)
 router.delete('/:id', async (req, res) => {
   try {
-    const issuanceId = parseInt(req.params.id);
+    const issuanceId = parseInt(req.params.id, 10);
+
+    if (isNaN(issuanceId)) {
+      return res.status(400).json({ error: 'Invalid issuance ID' });
+    }
+
+    const existingIssuance = await prisma.issuance.findUnique({
+      where: { issuance_id: issuanceId },
+    });
+
+    if (!existingIssuance) {
+      return res.status(404).json({ error: 'Issuance record not found' });
+    }
 
     await prisma.issuance.delete({
       where: { issuance_id: issuanceId },
@@ -110,8 +122,9 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Issuance record deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: `Internal server error : ${error.message}` });
+    res.status(500).json({ error: `Internal server error: ${error.message}` });
   }
 });
+
 
 module.exports = router;
