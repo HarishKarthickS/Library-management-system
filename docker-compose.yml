@@ -1,36 +1,6 @@
 version: '3.8'
 
 services:
-  backend:
-    build: ./backend
-    container_name: library-backend
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./backend/.env
-    depends_on:
-      - database
-    networks:
-      - library-network
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-
-  frontend:
-    build: ./frontend
-    container_name: library-frontend
-    ports:
-      - "5173:5173"
-    env_file:
-      - ./frontend/.env
-    depends_on:
-      - backend
-    networks:
-      - library-network
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-
   database:
     image: postgres:15
     container_name: library-db
@@ -44,10 +14,43 @@ services:
     networks:
       - library-network
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data  # 🔥 Ensures DB data is not lost
+
+  backend:
+    build: ./backend
+    container_name: library-backend
+    depends_on:
+      - database
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env  # 🔥 Mounts environment variables from host
+    networks:
+      - library-network
+    volumes:
+      - ./backend:/app  # 🔥 Mounts backend source code for hot reload
+      - /app/node_modules
+      - ./backend/logs:/app/logs  # 🔥 Ensures logs are stored on the host
+
+  frontend:
+    build: ./frontend
+    container_name: library-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./frontend/.env.production  # 🔥 Ensures frontend uses host config
+    networks:
+      - library-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf  # 🔥 Mounts Nginx config from host
+      - ./frontend/logs:/var/log/nginx  # 🔥 Ensures Nginx logs are stored on the host
 
 networks:
   library-network:
 
 volumes:
-  postgres-data:
+  postgres-data:  # 🔥 Persistent storage for database

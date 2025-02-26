@@ -1,0 +1,64 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # 2. Set up Google Cloud SDK
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: centering-badge-452020-n2
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # 3. Authenticate Docker for Artifact Registry
+      - name: Configure Docker Authentication for Artifact Registry
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      # 4. Build and push backend image
+      - name: Build and Push Backend Image
+        working-directory: backend
+        run: |
+          docker build -t us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend .
+          docker push us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend
+
+      # 5. Build and push frontend image
+      - name: Build and Push Frontend Image
+        working-directory: frontend
+        run: |
+          docker build -t us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend .
+          docker push us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend
+
+      # 6. Deploy backend to Cloud Run
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy backend-service \
+            --image=us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend \
+            --platform=managed \
+            --region=us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars "DATABASE_URL=postgresql://neondb_owner:npg_F86NKfpVHJtG@ep-silent-feather-a1kqnnic-pooler.ap-southeast-1.aws.neon.tech/library_db?sslmode=require,API_KEY=b53e7ec0605a96f154622f465ae20d2c7882b5c2873f83138f273b8988875f92,LOG_LEVEL=debug,NODE_ENV=production" \
+            --port=3000
+
+      # 7. Deploy frontend to Cloud Run
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy frontend-service \
+            --image=us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend \
+            --platform=managed \
+            --region=us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars "VITE_API_BASE_URL=https://backend-service-887498617048.us-central1.run.app,VITE_API_KEY=b53e7ec0605a96f154622f465ae20d2c7882b5c2873f83138f273b8988875f92" \
+            --port=8080

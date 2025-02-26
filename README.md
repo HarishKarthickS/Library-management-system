@@ -10,13 +10,20 @@ This system ensures smooth handling of **book issuance, member management, and i
 - **Backend:** Express 🚀 + Prisma 🛢️ + PostgreSQL 🐗
 - **Authentication & Security:** Middleware Magic ✨
 - **Deployment:** Docker 🐳 + CI/CD Ready 🎯
+- **Monitoring & Logging:** Winston 📜 + Google Cloud Logging 🌍
 
 ## 🎯 Features
 ✅ Add, edit, delete members with details 👇  
 ✅ Categorize books with collections & categories 📚  
 ✅ Issue books to members with return tracking ⏳  
 ✅ Generate reports on **never borrowed & overdue books** 📊  
+✅ Logging system with **Winston & Google Cloud Logging** 📝  
+✅ Containerized with **Docker & Google Cloud Run** 🚀  
 ✅ Intuitive and sleek UI for a seamless experience 🎨  
+
+## 🌍 Deployed Links
+- **Frontend:** [Library Frontend](https://frontend-service-887498617048.us-central1.run.app)
+- **Backend:** [Library Backend](https://backend-service-887498617048.us-central1.run.app)
 
 ## 🏡 Homepage
 ![Homepage](https://snipboard.io/3OnZ82.jpg)
@@ -61,6 +68,7 @@ library-management-system/
 │   ├── prisma/            # Database schema and migrations
 │   ├── services/          # Query services & business logic
 │   ├── middleware/        # Authentication & security
+│   ├── logging/           # Winston & Google Cloud Logging
 │   ├── tests/             # Automated backend tests
 │   ├── docs/              # API Documentation
 │   ├── Dockerfile         # Backend containerization
@@ -113,18 +121,12 @@ docker-compose up --build
 📌 **GET** `/reports/outstanding-books` - Books that are overdue  
 📌 **GET** `/reports/top-borrowed-books` - Most borrowed books ranking 📈  
 
-## 🏆 Why This Project is Awesome
-- **🚀 High Performance:** Optimized with Prisma & Vite ⚡
-- **📊 Insightful Reports:** Know which books are most/least borrowed 📉
-- **🎨 Sleek UI:** Easy navigation with an elegant design ✨
-- **🛠 Scalable & Maintainable:** Modular and future-proof architecture 🏢
-
-## 🏅 The Task & Job Relevance
-This project aligns perfectly with UI/UX, AI Engineering, Data Engineering, and DevOps roles:
-- **💐 UI/UX:** Designing an intuitive and responsive dashboard.
-- **📊 Data Engineering:** Managing book & member data effectively.
-- **🤖 AI Engineering:** Can be extended with AI-powered book recommendations.
-- **🛠 DevOps:** Streamlining deployment and CI/CD pipelines with Docker & GitHub Actions.
+## 🏆 Round 2 Task Implementation
+- ✅ **Logging System:** Implemented **Winston logging** with **Google Cloud Logging**
+- ✅ **Containerization:** Created **Dockerized** backend & frontend services
+- ✅ **Deployment:** Successfully deployed to **Google Cloud Run**
+- ✅ **Configuration Management:** Ensured **environment variables** are properly set for both frontend & backend
+- ✅ **Persistent Database:** Used **Google Cloud PostgreSQL (NeonDB)** for persistent storage
 
 ## 🤝 Contributing
 Got an idea? A feature request? **PRs are welcome!** Fork the repo and make it even better! 💡✨

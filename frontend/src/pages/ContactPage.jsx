@@ -1,4 +1,5 @@
-import { React,useState } from "react";
+import { React, useState } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,12 +11,13 @@ const ContactPage = () => {
     email: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.message) {
@@ -23,9 +25,20 @@ const ContactPage = () => {
       return;
     }
 
-    // Simulate form submission
-    toast.success("✅ Message sent successfully!");
-    setFormData({ name: "", email: "", message: "" });
+    setLoading(true);
+    try {
+      // Replace REACT_APP_API_BASE_URL with your actual backend URL in your .env file
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/contacts`,
+        formData
+      );
+      toast.success("✅ Message sent successfully!");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Error sending contact message:", error);
+      toast.error("❌ Failed to send message. Please try again later.");
+    }
+    setLoading(false);
   };
 
   return (
@@ -76,9 +89,10 @@ const ContactPage = () => {
           </div>
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition duration-300"
           >
-            Send Message
+            {loading ? "Sending..." : "Send Message"}
           </button>
         </form>
         
@@ -86,7 +100,7 @@ const ContactPage = () => {
         <div className="w-full md:w-1/3 p-4 flex flex-col justify-center items-center border-l md:border-l-2 border-gray-200">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Connect with Me</h2>
           <div className="flex flex-col space-y-4">
-            <a href="mailto:harish.s@kalvium.community]" className="text-blue-600 hover:underline text-lg flex items-center space-x-2">
+            <a href="mailto:harish.s@kalvium.community" className="text-blue-600 hover:underline text-lg flex items-center space-x-2">
               <FaEnvelope /> <span>Gmail</span>
             </a>
             <a href="https://www.linkedin.com/in/harish-karthick-s-45bb27276/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-lg flex items-center space-x-2">
