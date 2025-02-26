@@ -15,7 +15,7 @@ import ReportPage from "./pages/ReportPage";
 import "./App.css";
 
 // Navigation Bar Component
-const Navbar = ({ toggleDarkMode, isDarkMode }) => {
+const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="flex items-center">
@@ -28,10 +28,7 @@ const Navbar = ({ toggleDarkMode, isDarkMode }) => {
       <Link to="/issuance">🔄 Issuance</Link>
       <Link to="/reports">📊 Reports</Link>
       <Link to="/contact">📞 Contact</Link>
-
-        <button onClick={toggleDarkMode} className="ml-4 btn-primary">
-          {isDarkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
-        </button>
+      
       </div>
     </nav>
   );
