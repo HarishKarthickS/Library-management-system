@@ -7,7 +7,7 @@ This system ensures smooth handling of **book issuance, member management, and i
 
 ### 🛠 Tech Stack
 - **Frontend:** Vite ⚡ + React 🤍 (Latest Version)
-- **Backend:** Express 🚀 + Prisma 🛢️ + PostgreSQL 🐗
+- **Backend:** NodeJS 🎉 + Express 🚀 + Prisma 🛢️ + PostgreSQL 🐗
 - **Authentication & Security:** Middleware Magic ✨
 - **Deployment:** Docker 🐳 + CI/CD Ready 🎯
 - **Monitoring & Logging:** Winston 📜 + Google Cloud Logging 🌍
