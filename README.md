@@ -6,7 +6,7 @@ Welcome to the **Library Management System**—a powerful, efficient, and user-f
 This system ensures smooth handling of **book issuance, member management, and insightful reporting** with a full-stack modern tech approach.
 
 ### 🛠 Tech Stack
-- **Frontend:** Vite ⚡ + React 🤍 (Latest Version, No Routes)
+- **Frontend:** Vite ⚡ + React 🤍 (Latest Version)
 - **Backend:** Express 🚀 + Prisma 🛢️ + PostgreSQL 🐗
 - **Authentication & Security:** Middleware Magic ✨
 - **Deployment:** Docker 🐳 + CI/CD Ready 🎯
