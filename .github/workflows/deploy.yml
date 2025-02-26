@@ -5,6 +5,7 @@ on:
     branches:
       - main
 
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -31,6 +32,7 @@ jobs:
       - name: Build and Push Backend Image
         working-directory: backend
         run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
           docker build -t us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend .
           docker push us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend
 
@@ -38,6 +40,7 @@ jobs:
       - name: Build and Push Frontend Image
         working-directory: frontend
         run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
           docker build -t us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend .
           docker push us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend
 
