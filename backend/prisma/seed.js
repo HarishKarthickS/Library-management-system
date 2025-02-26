@@ -21,15 +21,27 @@ async function main() {
     )
   );
 
-  // Create collections
+  // Create collections (expanded list)
+  const collectionNames = [
+    'Fiction', 
+    'Non-Fiction', 
+    'Reference', 
+    'Periodicals', 
+    'Children', 
+    'Mystery', 
+    'Fantasy', 
+    'Biography', 
+    'Travel', 
+    'Science'
+  ];
   const collections = await Promise.all(
-    ['Fiction', 'Non-Fiction', 'Reference', 'Periodicals', 'Children'].map(name =>
+    collectionNames.map(name =>
       prisma.collection.create({ data: { collection_name: name } })
     )
   );
 
-  // Create categories
-  const categories = await Promise.all([
+  // Create categories (expanded list)
+  const categoryData = [
     { name: 'Science Fiction', sub: 'Space Opera' },
     { name: 'History', sub: 'Ancient Civilizations' },
     { name: 'Technology', sub: 'Programming' },
@@ -39,15 +51,23 @@ async function main() {
     { name: 'Science', sub: 'Biology' },
     { name: 'Business', sub: 'Management' },
     { name: 'Self-Help', sub: 'Motivational' },
-    { name: 'Cooking', sub: 'Baking' }
-  ].map(cat => 
-    prisma.category.create({
-      data: {
-        cat_name: cat.name,
-        sub_cat_name: cat.sub
-      }
-    })
-  ));
+    { name: 'Cooking', sub: 'Baking' },
+    { name: 'Philosophy', sub: 'Ethics' },
+    { name: 'Travel', sub: 'Guides' },
+    { name: 'Sports', sub: 'Fitness' },
+    { name: 'Health', sub: 'Wellness' },
+    { name: 'Education', sub: 'E-Learning' }
+  ];
+  const categories = await Promise.all(
+    categoryData.map(cat => 
+      prisma.category.create({
+        data: {
+          cat_name: cat.name,
+          sub_cat_name: cat.sub
+        }
+      })
+    )
+  );
 
   // Create 100 books
   const books = await Promise.all(
