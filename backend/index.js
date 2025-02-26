@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
+const { log } = require('./utils/logger'); // Import both logger & log
 
 // Load environment variables
 dotenv.config();
@@ -21,7 +22,11 @@ const bookRoutes = require('./routes/book.routes');
 const issuanceRoutes = require('./routes/issuance.routes');
 const reportRoutes = require('./routes/report.routes');
 const categoryCollectionRoutes = require('./routes/categoryCollection.routes');
+const contactRoutes = require('./routes/contact.route');
+
+
 // API Endpoints
+app.use('/contacts', contactRoutes);
 app.use('/member', memberRoutes);
 app.use('/book', bookRoutes);
 app.use('/issuance', issuanceRoutes);
@@ -30,30 +35,32 @@ app.use('/', categoryCollectionRoutes);
 
 // Base Route
 app.get('/', (req, res) => {
+  log("info", "Base route accessed", "GET /");
   res.json({ message: 'Library Management API is running!' });
 });
 
 // 404 Handler for Undefined Routes
 app.use((req, res, next) => {
+  log("warn", `404 Not Found - ${req.method} ${req.originalUrl}`, "Middleware");
   res.status(404).json({ error: 'Not Found' });
 });
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  log("error", `Internal Server Error - ${err.message}`, "Middleware");
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // Start Server
 app.listen(PORT, async () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  log("info", `🚀 Server running on http://localhost:${PORT}`, "Startup");
 
   // Ensure database connection
   try {
     await prisma.$connect();
-    console.log('✅ Connected to Database');
+    log("info", "✅ Connected to Database", "Startup");
   } catch (error) {
-    console.error('❌ Database Connection Failed:', error);
+    log("error", `❌ Database Connection Failed: ${error.message}`, "Startup");
     process.exit(1);
   }
 });
@@ -61,7 +68,7 @@ app.listen(PORT, async () => {
 // Graceful Shutdown
 process.on('SIGINT', async () => {
   await prisma.$disconnect();
-  console.log('🛑 Server shutting down...');
+  log("info", "🛑 Server shutting down...", "Shutdown");
   process.exit(0);
 });
 

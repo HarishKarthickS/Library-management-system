@@ -1,26 +1,23 @@
-# Use an official lightweight Node.js image
-FROM node:18-alpine
+# Use official Node.js image
+FROM node:18-alpine AS builder
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first (for better caching)
+# Copy package.json and package-lock.json first (better caching)
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --only=production
 
-# Copy the entire backend source code
+# Copy the backend source code
 COPY . .
 
-# Set environment variables (can be overridden by --env-file in docker run)
-ENV PORT=3000
-
-# Expose the application port
-EXPOSE 3000
-
-# Run database migrations before starting the server
+# Prisma generate (if using Prisma)
 RUN npx prisma generate
 
-# Command to start the server
+# Expose port
+EXPOSE 3000
+
+# Start backend server
 CMD ["npm", "start"]

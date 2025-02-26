@@ -82,3 +82,12 @@ model Issuance {
   book                Book     @relation(fields: [book_id], references: [book_id], onDelete: Cascade)
   member              Member   @relation(fields: [issuance_member], references: [mem_id], onDelete: Cascade)
 }
+
+// Model for Contact Us table
+model Contact {
+  contact_id Int      @id @default(autoincrement())
+  name       String
+  email      String
+  message    String
+  createdAt  DateTime @default(now())
+}

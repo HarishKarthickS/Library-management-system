@@ -15,10 +15,12 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.5.0",
+    "@google-cloud/logging-winston": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "pg": "^8.11.1"
+    "pg": "^8.11.1",
+    "winston": "^3.17.0"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
