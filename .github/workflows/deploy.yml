@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -15,36 +14,38 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # 2. Set up Google Cloud SDK
+      # 2. Authenticate with Google Cloud
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. Set up Google Cloud SDK
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: centering-badge-452020-n2
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
 
-      # 3. Authenticate Docker for Artifact Registry
+      # 4. Authenticate Docker for Artifact Registry
       - name: Configure Docker Authentication for Artifact Registry
         run: |
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      # 4. Build and push backend image
+      # 5. Build and push backend image
       - name: Build and Push Backend Image
         working-directory: backend
         run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev
           docker build -t us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend .
           docker push us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/backend
 
-      # 5. Build and push frontend image
+      # 6. Build and push frontend image
       - name: Build and Push Frontend Image
         working-directory: frontend
         run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev
           docker build -t us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend .
           docker push us-central1-docker.pkg.dev/centering-badge-452020-n2/my-repo/frontend
 
-      # 6. Deploy backend to Cloud Run
+      # 7. Deploy backend to Cloud Run
       - name: Deploy Backend to Cloud Run
         run: |
           gcloud run deploy backend-service \
@@ -55,7 +56,7 @@ jobs:
             --set-env-vars "DATABASE_URL=postgresql://neondb_owner:npg_F86NKfpVHJtG@ep-silent-feather-a1kqnnic-pooler.ap-southeast-1.aws.neon.tech/library_db?sslmode=require,API_KEY=b53e7ec0605a96f154622f465ae20d2c7882b5c2873f83138f273b8988875f92,LOG_LEVEL=debug,NODE_ENV=production" \
             --port=3000
 
-      # 7. Deploy frontend to Cloud Run
+      # 8. Deploy frontend to Cloud Run
       - name: Deploy Frontend to Cloud Run
         run: |
           gcloud run deploy frontend-service \
